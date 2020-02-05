@@ -80,7 +80,6 @@ app.post('/goty/:id',async(req,res)=>{
             mensaje:`Gracias por tu voto a ${ antes.name }`
         });
     }
-    }
-});
+    });
 
 export const api = functions.https.onRequest(app);
