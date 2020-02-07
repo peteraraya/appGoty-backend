@@ -31,9 +31,9 @@ export const getGOTY = functions.https.onRequest(async (request, response) => {
     // Referencia a mi Goty Year
     const gotyRef = db.collection('goty');
     // Hagho un snaoshoot
-    const docsSnap = gotyRef.get(); // get regresa un promise por lo cual se transforma en in proceso asincrono || no es instantanio
+    const docsSnap = await gotyRef.get();// get regresa un promise por lo cual se transforma en in proceso asincrono || no es instantanio
 
-    const juegos = (await docsSnap).docs.map( doc=>doc.data());
+    const juegos = docsSnap.docs.map(doc => doc.data());
     // Referencia a como se encuentra la bd en ese momento || no es recomendado
     // response.json( (await docsSnap).docs[0].data() );
     response.json(juegos);
@@ -47,7 +47,7 @@ export const getGOTY = functions.https.onRequest(async (request, response) => {
 const app = express();
 
 //Cors: para que mi aplicación acepte peticiones de otros dominios
-app.use( cors ({origin:true}));
+app.use(cors({ origin: true }));
 
 // Petición GET
 app.get('/goty',async(req,res)=>{
@@ -59,10 +59,11 @@ app.get('/goty',async(req,res)=>{
     res.json(juegos);
 });
 // Petición POST
+
 app.post('/goty/:id',async(req,res)=>{
     const id = req.params.id;
     const gameRef = db.collection('goty').doc(id);
-    const gameSnap = await gameRef.get(); 
+    const gameSnap = await gameRef.get();
 
     if(!gameSnap.exists){
         res.status(404).json({
